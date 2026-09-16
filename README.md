@@ -135,3 +135,45 @@ Array Searching
 ```
 
 ---
+
+# Day 4 — OOP Fundamentals
+
+This is extremely important.
+
+Learn:
+
+## Classes & Objects
+
+```csharp
+class Employee
+{
+    public string Name { get; set; }
+}
+```
+
+## Four pillars of OOP
+
+### 1. Encapsulation
+
+### 2. Inheritance
+
+### 3. Polymorphism
+
+### 4. Abstraction
+
+Also learn:
+
+* Constructors
+* Constructor overloading
+* Properties
+* Fields
+* Access modifiers
+* `public`
+* `private`
+* `protected`
+* `internal`
+* `static`
+* `readonly`
+* `const`
+
+---
