@@ -41,4 +41,97 @@ Understand a basic .NET 8 console application.
 
 ---
 
+# Day 2 — C# Fundamentals
 
+Learn:
+
+### Variables
+
+* `int`
+* `long`
+* `float`
+* `double`
+* `decimal`
+* `bool`
+* `char`
+* `string`
+
+### Constants
+
+```csharp
+const int age = 25;
+```
+
+### Operators
+
+* Arithmetic
+* Relational
+* Logical
+* Assignment
+* Increment/decrement
+* Null-coalescing
+* Null-conditional
+
+### Control Flow
+
+* `if`
+* `else`
+* `else if`
+* `switch`
+* `for`
+* `foreach`
+* `while`
+* `do while`
+
+Practice:
+
+* Calculator
+* Number checker
+* Even/odd
+* Prime number
+* Factorial
+* Fibonacci
+
+---
+
+# Day 3 — C# Methods, Strings & Arrays
+
+Learn:
+
+* Methods
+* Parameters
+* Return values
+* Optional parameters
+* Named parameters
+* `ref`
+* `out`
+* `in`
+* Method overloading
+* Recursion
+
+### Strings
+
+* String methods
+* String interpolation
+* `StringBuilder`
+* String comparison
+* Parsing
+* Formatting
+
+### Arrays
+
+* Single-dimensional arrays
+* Multi-dimensional arrays
+* Jagged arrays
+
+Practice:
+
+```text
+Employee Salary Calculator
+Student Marks Calculator
+String Analyzer
+Array Sorting
+Array Searching
+```
+
+---
