@@ -1,0 +1,1466 @@
+# Common .NET Problems — Troubleshooting Guide
+
+This is one of the **most important practical sections** for a .NET developer. In real projects, knowing how to identify the problem is just as important as writing code.
+
+Use this general troubleshooting flow:
+
+```text
+Problem
+   ↓
+Check HTTP Status / Error Message
+   ↓
+Check Visual Studio Output / Logs
+   ↓
+Check Exception
+   ↓
+Check Call Stack
+   ↓
+Identify Layer
+   ↓
+Fix
+   ↓
+Test Again
+```
+
+---
+
+# 1. API Not Starting
+
+Typical symptoms:
+
+```text
+Application failed to start
+Unable to connect to localhost
+Unable to bind to address
+500 during startup
+Process terminated
+```
+
+Check:
+
+```text
+Program.cs
+Port
+Configuration
+Dependencies
+Logs
+```
+
+---
+
+## 1.1 Check Program.cs
+
+First inspect:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+
+var app = builder.Build();
+
+app.UseHttpsRedirection();
+
+app.MapControllers();
+
+app.Run();
+```
+
+Look for:
+
+* Missing service registration
+* Incorrect middleware
+* Incorrect configuration
+* Exception during application startup
+* Incorrect dependency registration
+
+For example:
+
+```csharp
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+```
+
+If `EmployeeService` has dependencies that aren't registered correctly, the application can fail when resolving the service.
+
+---
+
+# 2. Port Problem
+
+You may see:
+
+```text
+Failed to bind to address
+Address already in use
+```
+
+Check the URL shown when the API starts:
+
+```text
+https://localhost:7001
+http://localhost:5001
+```
+
+You can also check:
+
+```text
+Properties
+   ↓
+launchSettings.json
+```
+
+Example:
+
+```json
+{
+  "profiles": {
+    "https": {
+      "applicationUrl": "https://localhost:7001;http://localhost:5001"
+    }
+  }
+}
+```
+
+If another application is already using the port, change the port or stop the process using it.
+
+---
+
+# 3. Configuration Problem
+
+Check:
+
+```text
+appsettings.json
+appsettings.Development.json
+Environment Variables
+User Secrets
+```
+
+Example:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=.;Database=EmployeeDB;Trusted_Connection=True;TrustServerCertificate=True;"
+  }
+}
+```
+
+Then:
+
+```csharp
+var connectionString =
+    builder.Configuration.GetConnectionString("DefaultConnection");
+```
+
+Check carefully:
+
+```text
+Key name
+Database name
+Server name
+Environment
+Value
+```
+
+---
+
+# 4. Dependency Problem
+
+Suppose you have:
+
+```csharp
+public EmployeesController(
+    IEmployeeService employeeService)
+{
+    _employeeService = employeeService;
+}
+```
+
+but forgot:
+
+```csharp
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+```
+
+You may receive an error similar to:
+
+```text
+Unable to resolve service for type
+'IEmployeeService'
+while attempting to activate
+'EmployeesController'
+```
+
+### Fix
+
+Register the dependency:
+
+```csharp
+builder.Services.AddScoped<
+    IEmployeeService,
+    EmployeeService>();
+```
+
+---
+
+# 5. Logs
+
+When the API doesn't start, don't immediately change code.
+
+Check:
+
+```text
+Visual Studio
+   ↓
+Output
+   ↓
+Debug / ASP.NET Core logs
+```
+
+Also check the terminal if you're running with:
+
+```bash
+dotnet run
+```
+
+Look for:
+
+```text
+Exception
+Error
+Failed
+Unable
+Invalid
+```
+
+The first meaningful exception is often the best place to start.
+
+---
+
+# 6. API Startup Troubleshooting Checklist
+
+```text
+API not starting
+      ↓
+Is Program.cs correct?
+      ↓
+Is the port available?
+      ↓
+Is configuration valid?
+      ↓
+Are all services registered?
+      ↓
+Are required NuGet packages installed?
+      ↓
+Are environment variables correct?
+      ↓
+Check logs
+      ↓
+Check exception
+```
+
+---
+
+# 7. Database Connection Failure
+
+Typical error:
+
+```text
+A network-related or instance-specific error occurred
+while establishing a connection to SQL Server.
+```
+
+Check:
+
+```text
+Connection string
+SQL Server
+Credentials
+Firewall
+Database name
+```
+
+---
+
+# 8. Check Connection String
+
+Example:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection":
+      "Server=localhost;Database=EmployeeDB;Trusted_Connection=True;TrustServerCertificate=True;"
+  }
+}
+```
+
+Check:
+
+### Server
+
+```text
+localhost
+.
+localhost\SQLEXPRESS
+SERVERNAME
+```
+
+depending on your SQL Server installation.
+
+### Database
+
+Make sure:
+
+```text
+EmployeeDB
+```
+
+actually exists.
+
+### Authentication
+
+If using SQL authentication:
+
+```text
+User ID
+Password
+```
+
+must be correct.
+
+If using Windows authentication:
+
+```text
+Trusted_Connection=True
+```
+
+or the equivalent supported configuration should match your setup.
+
+---
+
+# 9. Check SQL Server
+
+Make sure SQL Server is running.
+
+Check:
+
+```text
+SQL Server
+   ↓
+SQL Server Management Studio
+```
+
+Try connecting manually.
+
+If SSMS cannot connect, your .NET API will normally not be able to connect either.
+
+---
+
+# 10. Check Database Name
+
+Suppose your connection string says:
+
+```text
+Database=EmployeeDB
+```
+
+but the actual database is:
+
+```text
+EmployeeManagementDB
+```
+
+The connection/database operation can fail.
+
+Verify in SQL Server:
+
+```sql
+SELECT name
+FROM sys.databases;
+```
+
+---
+
+# 11. Check Credentials
+
+For SQL authentication:
+
+```text
+Server
+Username
+Password
+Database
+```
+
+all need to be valid.
+
+Don't put real production passwords directly into:
+
+```text
+appsettings.json
+```
+
+or Git.
+
+Use secure configuration/secrets.
+
+---
+
+# 12. Firewall
+
+For remote SQL Server connections, check:
+
+```text
+Client
+   ↓
+Network
+   ↓
+Firewall
+   ↓
+SQL Server
+```
+
+A firewall can block the SQL Server port.
+
+For a local development setup, firewall is less commonly the first cause than an incorrect server/instance or SQL Server service configuration.
+
+---
+
+# 13. Database Troubleshooting Checklist
+
+```text
+Database connection failed
+        ↓
+Check connection string
+        ↓
+Check SQL Server running
+        ↓
+Check server/instance name
+        ↓
+Check database exists
+        ↓
+Check authentication
+        ↓
+Check username/password
+        ↓
+Check network/firewall
+        ↓
+Test connection independently
+```
+
+---
+
+# 14. 401 — Unauthorized
+
+Remember:
+
+```text
+401 → Authentication problem
+```
+
+Usually means the API could not successfully authenticate the caller.
+
+Check:
+
+```text
+Token
+Issuer
+Audience
+Expiration
+Authentication configuration
+```
+
+---
+
+# 15. Check Token
+
+Request should contain:
+
+```http
+Authorization: Bearer <access-token>
+```
+
+Check:
+
+```text
+Is token present?
+Is it a valid JWT?
+Is it expired?
+Is it intended for this API?
+```
+
+---
+
+# 16. Check Token Expiration
+
+JWT commonly contains:
+
+```text
+exp
+```
+
+which represents the expiration time.
+
+If the token is expired:
+
+```text
+Token
+   ↓
+Expired
+   ↓
+401
+```
+
+Get a fresh access token and retry.
+
+---
+
+# 17. Check Issuer
+
+JWT contains:
+
+```text
+iss
+```
+
+The API validates that the token was issued by the expected identity provider/tenant.
+
+For Microsoft Entra ID, your configuration must correspond to the expected tenant/authority.
+
+Conceptually:
+
+```text
+Token Issuer
+      ↓
+Expected Issuer
+      ↓
+Match?
+   ┌──┴──┐
+  Yes    No
+   ↓      ↓
+Continue 401
+```
+
+---
+
+# 18. Check Audience
+
+JWT contains:
+
+```text
+aud
+```
+
+The audience identifies the intended resource/API.
+
+A common problem is:
+
+```text
+Token audience
+      ≠
+API expected audience
+```
+
+Then authentication can fail.
+
+Check:
+
+```text
+Client configuration
+API App Registration
+Token
+ASP.NET Core JWT configuration
+```
+
+---
+
+# 19. Authentication Configuration
+
+Typical ASP.NET Core configuration:
+
+```csharp
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority =
+            "https://login.microsoftonline.com/{tenant-id}/v2.0";
+
+        options.Audience = "{api-client-id}";
+    });
+```
+
+And middleware order:
+
+```csharp
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+```
+
+A common mistake is:
+
+```csharp
+app.UseAuthorization();
+app.UseAuthentication();
+```
+
+The normal order should be:
+
+```text
+Authentication
+      ↓
+Authorization
+      ↓
+Endpoints
+```
+
+---
+
+# 20. 401 Troubleshooting Flow
+
+```text
+401
+ ↓
+Is Authorization header present?
+ ↓
+Is Bearer token present?
+ ↓
+Is token valid?
+ ↓
+Is token expired?
+ ↓
+Is issuer correct?
+ ↓
+Is audience correct?
+ ↓
+Is authentication configured?
+ ↓
+Is UseAuthentication() present?
+ ↓
+Check logs
+```
+
+---
+
+# 21. 403 — Forbidden
+
+Remember:
+
+```text
+403 → Authentication succeeded,
+      but authorization failed.
+```
+
+Check:
+
+```text
+Role
+Claim
+Policy
+Authorization
+```
+
+---
+
+# 22. Role Problem
+
+Example:
+
+```csharp
+[Authorize(Roles = "Employee.Admin")]
+```
+
+The user may be authenticated, but the token may not contain the expected role.
+
+Conceptually:
+
+```text
+User authenticated
+       ↓
+Role required:
+Employee.Admin
+       ↓
+Does user have it?
+    ┌──┴──┐
+   Yes    No
+    ↓      ↓
+Access    403
+```
+
+---
+
+# 23. Claim Problem
+
+Suppose your policy requires:
+
+```csharp
+policy.RequireClaim("department", "IT");
+```
+
+but the authenticated user's token doesn't contain:
+
+```text
+department = IT
+```
+
+then authorization fails.
+
+Inspect claims while debugging:
+
+```csharp
+foreach (var claim in User.Claims)
+{
+    Console.WriteLine(
+        $"{claim.Type} = {claim.Value}");
+}
+```
+
+In production, use structured logging carefully and avoid logging sensitive token contents.
+
+---
+
+# 24. Policy Problem
+
+Example:
+
+```csharp
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("EmployeeRead", policy =>
+    {
+        policy.RequireClaim("scp", "Employee.Read");
+    });
+});
+```
+
+Controller:
+
+```csharp
+[Authorize(Policy = "EmployeeRead")]
+[HttpGet]
+public IActionResult GetEmployees()
+{
+    return Ok();
+}
+```
+
+If the required authorization claim isn't present:
+
+```text
+403
+```
+
+---
+
+# 25. 403 Troubleshooting Flow
+
+```text
+403
+ ↓
+User authenticated?
+ ↓
+Which role is required?
+ ↓
+Does token contain role?
+ ↓
+Which policy is required?
+ ↓
+Does token contain required claim/scope?
+ ↓
+Is authorization configured?
+ ↓
+Check [Authorize]
+ ↓
+Check policy
+```
+
+---
+
+# 26. 500 — Internal Server Error
+
+Remember:
+
+```text
+500 → Unexpected server/application failure
+```
+
+Check:
+
+```text
+Exception
+Stack trace
+Logs
+Middleware
+Database
+Service layer
+```
+
+---
+
+# 27. Check Exception
+
+Suppose API returns:
+
+```text
+500 Internal Server Error
+```
+
+Don't stop there.
+
+Run the API in Visual Studio and inspect:
+
+```text
+Exception
+Message
+Stack Trace
+Inner Exception
+Source
+Line Number
+```
+
+Example:
+
+```text
+NullReferenceException
+   at EmployeeService.GetEmployee(...)
+   at EmployeesController.GetEmployee(...)
+```
+
+Now you know the problem is probably around the service operation.
+
+---
+
+# 28. Check Stack Trace
+
+Suppose:
+
+```text
+Controller
+   ↓
+Service
+   ↓
+Repository
+   ↓
+SQL
+```
+
+Exception:
+
+```text
+SqlException
+   ↓
+EmployeeRepository.GetByIdAsync()
+   ↓
+EmployeeService.GetByIdAsync()
+   ↓
+EmployeesController.GetById()
+```
+
+The repository/database layer becomes the main area to investigate.
+
+---
+
+# 29. Check Logs
+
+Use:
+
+```csharp
+_logger.LogError(
+    ex,
+    "Error while retrieving employee {EmployeeId}",
+    id);
+```
+
+A useful log should tell you:
+
+```text
+What operation failed?
+Which entity/request?
+What exception occurred?
+```
+
+Avoid logging passwords, access tokens, connection-string secrets, or other sensitive information.
+
+---
+
+# 30. Check Middleware
+
+A global exception middleware can catch unhandled exceptions and provide consistent responses.
+
+Example:
+
+```csharp
+public class GlobalExceptionMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly ILogger<GlobalExceptionMiddleware> _logger;
+
+    public GlobalExceptionMiddleware(
+        RequestDelegate next,
+        ILogger<GlobalExceptionMiddleware> logger)
+    {
+        _next = next;
+        _logger = logger;
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
+        {
+            await _next(context);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unhandled exception");
+
+            context.Response.StatusCode = 500;
+            context.Response.ContentType = "application/json";
+
+            await context.Response.WriteAsJsonAsync(new
+            {
+                message = "An unexpected error occurred."
+            });
+        }
+    }
+}
+```
+
+Register it early enough in the pipeline to catch exceptions from downstream middleware/endpoints:
+
+```csharp
+app.UseMiddleware<GlobalExceptionMiddleware>();
+```
+
+---
+
+# 31. Check Service Layer
+
+Suppose:
+
+```csharp
+public async Task<EmployeeResponseDto?> GetByIdAsync(int id)
+{
+    var employee = await _repository.GetByIdAsync(id);
+
+    return new EmployeeResponseDto
+    {
+        EmployeeId = employee.EmployeeId,
+        Name = employee.Name
+    };
+}
+```
+
+If:
+
+```text
+employee == null
+```
+
+then:
+
+```text
+employee.EmployeeId
+```
+
+can cause:
+
+```text
+NullReferenceException
+```
+
+Safer:
+
+```csharp
+if (employee == null)
+{
+    return null;
+}
+```
+
+Then the controller can return:
+
+```csharp
+return NotFound();
+```
+
+instead of allowing an unexpected exception to become a 500.
+
+---
+
+# 32. Check Database Layer
+
+If the repository fails, check:
+
+```text
+Connection
+SQL command
+Parameters
+Stored procedure
+Table
+Column names
+Data types
+Constraints
+Transaction
+```
+
+Example:
+
+```csharp
+command.Parameters.Add(
+    new SqlParameter("@EmployeeId", employeeId));
+```
+
+Make sure the parameter matches the SQL:
+
+```sql
+WHERE EmployeeId = @EmployeeId
+```
+
+---
+
+# 33. Common 500 Scenario
+
+### API
+
+```text
+500
+```
+
+### Log
+
+```text
+SqlException:
+Invalid object name 'Employees'.
+```
+
+### Investigation
+
+Check database:
+
+```sql
+SELECT DB_NAME();
+```
+
+Maybe the API is connected to:
+
+```text
+EmployeeDB_Dev
+```
+
+while the `Employees` table exists in:
+
+```text
+EmployeeDB
+```
+
+### Root cause
+
+Wrong database configuration.
+
+This is why you should trace the entire flow rather than only looking at the controller.
+
+---
+
+# 34. Common .NET Troubleshooting Map
+
+```text
+┌────────────────────────────────────┐
+│ API not starting                   │
+├────────────────────────────────────┤
+│ Program.cs                         │
+│ Port                               │
+│ Configuration                     │
+│ Dependencies                       │
+│ Logs                               │
+└────────────────────────────────────┘
+
+┌────────────────────────────────────┐
+│ Database connection failure        │
+├────────────────────────────────────┤
+│ Connection string                  │
+│ SQL Server                         │
+│ Server/instance                    │
+│ Database                           │
+│ Credentials                        │
+│ Network/firewall                   │
+└────────────────────────────────────┘
+
+┌────────────────────────────────────┐
+│ 401                                │
+├────────────────────────────────────┤
+│ Token                              │
+│ Expiration                         │
+│ Issuer                             │
+│ Audience                           │
+│ Authentication configuration       │
+└────────────────────────────────────┘
+
+┌────────────────────────────────────┐
+│ 403                                │
+├────────────────────────────────────┤
+│ Role                               │
+│ Claim                              │
+│ Scope                              │
+│ Policy                             │
+│ Authorization configuration        │
+└────────────────────────────────────┘
+
+┌────────────────────────────────────┐
+│ 500                                │
+├────────────────────────────────────┤
+│ Exception                          │
+│ Stack trace                        │
+│ Logs                               │
+│ Middleware                         │
+│ Service                            │
+│ Repository                         │
+│ Database                           │
+└────────────────────────────────────┘
+```
+
+---
+
+# 35. Real-World Troubleshooting Method
+
+When you get an error, follow **five steps**.
+
+## Step 1 — Reproduce
+
+Can you consistently reproduce the problem?
+
+```text
+GET /api/employees/10
+```
+
+---
+
+## Step 2 — Identify the Layer
+
+```text
+HTTP
+ ↓
+Middleware
+ ↓
+Controller
+ ↓
+Service
+ ↓
+Repository
+ ↓
+Database
+```
+
+Find where it fails.
+
+---
+
+## Step 3 — Inspect
+
+Use:
+
+```text
+Swagger
+Postman
+Browser DevTools
+Visual Studio Debugger
+Logs
+SQL Server
+```
+
+---
+
+## Step 4 — Fix Root Cause
+
+Don't simply hide the error.
+
+For example, don't turn every exception into:
+
+```text
+return Ok();
+```
+
+Instead, fix the underlying problem.
+
+---
+
+## Step 5 — Retest
+
+After fixing:
+
+```text
+Unit Test
+   ↓
+API Test
+   ↓
+Integration Test
+   ↓
+Git Commit
+   ↓
+CI Pipeline
+```
+
+---
+
+# 36. Final Troubleshooting Cheat Sheet
+
+```text
+API won't start
+→ Program.cs
+→ Port
+→ Configuration
+→ DI
+→ Packages
+→ Logs
+
+Database won't connect
+→ Connection string
+→ SQL Server
+→ Server/instance
+→ Database
+→ Credentials
+→ Network/firewall
+
+401
+→ Token
+→ Expiration
+→ Issuer
+→ Audience
+→ Authentication
+→ UseAuthentication()
+
+403
+→ Role
+→ Claim
+→ Scope
+→ Policy
+→ Authorization
+→ [Authorize]
+
+404
+→ HTTP method
+→ URL
+→ Controller route
+→ Action route
+→ Resource ID
+
+400
+→ JSON
+→ Model binding
+→ Validation
+→ Request parameters
+
+409
+→ Duplicate/conflicting resource
+→ Business rule
+→ Concurrency
+
+500
+→ Exception
+→ Stack trace
+→ Logs
+→ Middleware
+→ Service
+→ Repository
+→ SQL
+
+502
+→ Gateway/proxy
+→ Upstream service
+
+503
+→ Application/service unavailable
+→ Hosting
+→ Health/dependency availability
+```
+
+## ⭐ One rule to remember
+
+When a .NET API fails, **don't guess**.
+
+Use:
+
+```text
+Status Code
+     ↓
+Error Message
+     ↓
+Logs
+     ↓
+Exception
+     ↓
+Stack Trace
+     ↓
+Breakpoint
+     ↓
+Locals / Watch
+     ↓
+Call Stack
+     ↓
+Identify Layer
+     ↓
+Fix Root Cause
+     ↓
+Retest
+```
+
+---
+
+# 🔥 FINAL PROJECT — Full .NET 8 Enterprise API
+
+For the final 30-day project, don't build another simple CRUD application.
+
+Build:
+
+# Employee Management & Reporting API
+
+### Architecture
+
+```text
+                   ┌──────────────────┐
+                   │     Client       │
+                   │ Swagger/Postman  │
+                   └────────┬─────────┘
+                            │
+                            ▼
+                   ┌──────────────────┐
+                   │ ASP.NET Core API │
+                   └────────┬─────────┘
+                            │
+                   ┌────────▼─────────┐
+                   │    Middleware    │
+                   │ Logging / Errors │
+                   └────────┬─────────┘
+                            │
+                   ┌────────▼─────────┐
+                   │   Controllers    │
+                   └────────┬─────────┘
+                            │
+                   ┌────────▼─────────┐
+                   │ Service / BAL    │
+                   └────────┬─────────┘
+                            │
+                   ┌────────▼─────────┐
+                   │ Repository / DAL │
+                   └──────┬─────┬─────┘
+                          │     │
+                 ┌────────▼─┐ ┌─▼──────────┐
+                 │SQL Server│ │   Redis    │
+                 └──────────┘ └────────────┘
+
+                          │
+                          ▼
+                 ┌────────────────┐
+                 │ ADOMD Client   │
+                 └───────┬────────┘
+                         ▼
+                 ┌────────────────┐
+                 │Analysis Service│
+                 │     / MDX      │
+                 └────────────────┘
+```
+
+### Features
+
+Your project should contain:
+
+**Employee**
+
+```text
+Create
+Read
+Update
+Delete
+Search
+Filter
+Sort
+Pagination
+```
+
+**Department**
+
+```text
+Create
+Read
+Update
+Delete
+```
+
+**Authentication**
+
+```text
+Microsoft Entra ID
+MSAL
+JWT
+Roles
+Claims
+Authorization
+```
+
+**Database**
+
+```text
+SQL Server
+Stored Procedures
+Joins
+CTEs
+UNION
+Indexes
+Transactions
+```
+
+**Data Access**
+
+```text
+ADO.NET
+DAL
+BAL
+Repository
+```
+
+**Analytics**
+
+```text
+ADOMD Client
+MDX
+Analysis Services
+```
+
+**Performance**
+
+```text
+Redis
+Caching
+Async/Await
+Pagination
+```
+
+**API Infrastructure**
+
+```text
+Middleware
+Global Exception Handling
+Logging
+Configuration
+appsettings.json
+DTOs
+Validation
+JSON Serialization
+```
+
+**DevOps**
+
+```text
+Git
+Azure DevOps
+CI/CD
+YAML
+Build
+Test
+Deploy
+```
+
+---
+

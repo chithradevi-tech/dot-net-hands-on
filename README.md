@@ -1,179 +1,149 @@
-# 🗓️ WEEK 1 — C# & .NET FUNDAMENTALS
-
-## Day 1 — .NET Introduction & Environment Setup
-
-Learn:
-
-* What is .NET?
-* .NET Framework vs .NET Core vs modern .NET
-* .NET 6/7/8 evolution
-* What is .NET 8?
-* CLR
-* CTS
-* CLS
-* JIT
-* Managed code vs unmanaged code
-* SDK vs Runtime
-* .NET CLI
-* Visual Studio
-* Visual Studio Code
-* Solution vs Project
-* `.csproj`
-* NuGet
-* Build
-* Restore
-* Run
-* Publish
-
-Practice:
-
-```bash
-dotnet --version
-dotnet --info
-dotnet new console
-dotnet build
-dotnet run
-dotnet restore
-dotnet publish
-```
-
-Understand a basic .NET 8 console application.
-
----
-
-# Day 2 — C# Fundamentals
-
-Learn:
-
-### Variables
-
-* `int`
-* `long`
-* `float`
-* `double`
-* `decimal`
-* `bool`
-* `char`
-* `string`
-
-### Constants
-
-```csharp
-const int age = 25;
-```
-
-### Operators
-
-* Arithmetic
-* Relational
-* Logical
-* Assignment
-* Increment/decrement
-* Null-coalescing
-* Null-conditional
-
-### Control Flow
-
-* `if`
-* `else`
-* `else if`
-* `switch`
-* `for`
-* `foreach`
-* `while`
-* `do while`
-
-Practice:
-
-* Calculator
-* Number checker
-* Even/odd
-* Prime number
-* Factorial
-* Fibonacci
+| Topic                  | Covered |
+| ---------------------- | ------- |
+| C# Fundamentals        | ✅       |
+| OOP Concepts           | ✅       |
+| Collections            | ✅       |
+| Generics               | ✅       |
+| LINQ                   | ✅       |
+| Lambda Expressions     | ✅       |
+| Exception Handling     | ✅       |
+| Async/Await            | ✅       |
+| Task                   | ✅       |
+| ASP.NET Core           | ✅       |
+| .NET 8                 | ✅       |
+| ASP.NET Core Web API   | ✅       |
+| REST APIs              | ✅       |
+| Controllers            | ✅       |
+| Routing                | ✅       |
+| Dependency Injection   | ✅       |
+| Models                 | ✅       |
+| DTOs                   | ✅       |
+| JSON Serialization     | ✅       |
+| JSON Deserialization   | ✅       |
+| Middleware             | ✅       |
+| Configuration          | ✅       |
+| appsettings.json       | ✅       |
+| Logging                | ✅       |
+| Error Handling         | ✅       |
+| SQL Server             | ✅       |
+| Stored Procedures      | ✅       |
+| Joins                  | ✅       |
+| CTE                    | ✅       |
+| UNION                  | ✅       |
+| ADO.NET                | ✅       |
+| Data Access Layer      | ✅       |
+| Layered Architecture   | ✅       |
+| Controller → BAL → DAL | ✅       |
+| ADOMD Client           | ✅       |
+| MDX Basics             | ✅       |
+| Microsoft Entra ID     | ✅       |
+| MSAL                   | ✅       |
+| Managed Identity       | ✅       |
+| Redis Basics           | ✅       |
+| Azure DevOps           | ✅       |
+| Git                    | ✅       |
+| CI/CD                  | ✅       |
+| API Debugging          | ✅       |
+| API Troubleshooting    | ✅       |
 
 ---
 
-# Day 3 — C# Methods, Strings & Arrays
+# 🎯 How I Recommend You Study Each Day
 
-Learn:
+Don't spend the entire month only watching tutorials.
 
-* Methods
-* Parameters
-* Return values
-* Optional parameters
-* Named parameters
-* `ref`
-* `out`
-* `in`
-* Method overloading
-* Recursion
+Use this ratio:
 
-### Strings
+**30% → Learn theory**
+**50% → Write code**
+**20% → Debug + interview questions**
 
-* String methods
-* String interpolation
-* `StringBuilder`
-* String comparison
-* Parsing
-* Formatting
-
-### Arrays
-
-* Single-dimensional arrays
-* Multi-dimensional arrays
-* Jagged arrays
-
-Practice:
+For example, on **Day 13 — Dependency Injection**:
 
 ```text
-Employee Salary Calculator
-Student Marks Calculator
-String Analyzer
-Array Sorting
-Array Searching
+30 min → Understand DI
+30 min → Understand IoC
+30 min → Understand lifetimes
+60 min → Build DI example
+30 min → Break the application intentionally
+30 min → Debug it
+30 min → Interview questions
 ```
 
 ---
 
-# Day 4 — OOP Fundamentals
+# 🚀 The Learning Order You Should Remember
 
-This is extremely important.
+The entire month can be reduced to this progression:
 
-Learn:
-
-## Classes & Objects
-
-```csharp
-class Employee
-{
-    public string Name { get; set; }
-}
+```text
+C#
+ ↓
+OOP
+ ↓
+Collections
+ ↓
+Generics
+ ↓
+LINQ + Lambda
+ ↓
+Exception Handling
+ ↓
+Async/Await + Task
+ ↓
+.NET 8
+ ↓
+ASP.NET Core
+ ↓
+Web API
+ ↓
+REST
+ ↓
+Controllers + Routing
+ ↓
+Models + DTOs
+ ↓
+JSON
+ ↓
+Dependency Injection
+ ↓
+Middleware
+ ↓
+Configuration
+ ↓
+Logging
+ ↓
+SQL Server
+ ↓
+Stored Procedures
+ ↓
+Joins + CTE + UNION
+ ↓
+ADO.NET
+ ↓
+DAL + BAL
+ ↓
+Layered Architecture
+ ↓
+ADOMD Client
+ ↓
+MDX
+ ↓
+Entra ID
+ ↓
+MSAL
+ ↓
+Managed Identity
+ ↓
+Redis
+ ↓
+Azure DevOps
+ ↓
+CI/CD
+ ↓
+Debugging + Troubleshooting
+ ↓
+Enterprise .NET 8 API
 ```
 
-## Four pillars of OOP
 
-### 1. Encapsulation
-
-### 2. Inheritance
-
-### 3. Polymorphism
-
-### 4. Abstraction
-
-Also learn:
-
-* Constructors
-* Constructor overloading
-* Properties
-* Fields
-* Access modifiers
-* `public`
-* `private`
-* `protected`
-* `internal`
-* `static`
-* `readonly`
-* `const`
-
----
