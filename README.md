@@ -56,7 +56,7 @@ Use this ratio:
 
 **30% → Learn theory**
 **50% → Write code**
-**20% → Debug + interview questions**
+**20% → Debug
 
 For example, on **Day 13 — Dependency Injection**:
 
@@ -67,7 +67,6 @@ For example, on **Day 13 — Dependency Injection**:
 60 min → Build DI example
 30 min → Break the application intentionally
 30 min → Debug it
-30 min → Interview questions
 ```
 
 ---
