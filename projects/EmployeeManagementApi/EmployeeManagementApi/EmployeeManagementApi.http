@@ -1,0 +1,70 @@
+@EmployeeManagementApi_HostAddress = http://localhost:5264
+
+### 1. Get all employees
+GET {{EmployeeManagementApi_HostAddress}}/api/employees
+Accept: application/json
+
+###
+
+### 2. Get employee by ID
+GET {{EmployeeManagementApi_HostAddress}}/api/employees/1
+Accept: application/json
+
+###
+
+### 3. Filter employees by department
+GET {{EmployeeManagementApi_HostAddress}}/api/employees?department=IT
+Accept: application/json
+
+###
+
+### 4. Search employees by name
+GET {{EmployeeManagementApi_HostAddress}}/api/employees/search?name=arun
+Accept: application/json
+
+###
+
+### 5. Create an employee
+POST {{EmployeeManagementApi_HostAddress}}/api/employees
+Content-Type: application/json
+
+{
+  "name": "Arun Kumar",
+  "email": "arun@example.com",
+  "department": "IT",
+  "jobTitle": "Software Developer"
+}
+
+###
+
+### 6. Update an employee
+PUT {{EmployeeManagementApi_HostAddress}}/api/employees/1
+Content-Type: application/json
+
+{
+  "name": "Arun Kumar",
+  "email": "arun.updated@example.com",
+  "department": "IT",
+  "jobTitle": "Senior Software Developer"
+}
+
+###
+
+### 7. Partially update an employee
+PATCH {{EmployeeManagementApi_HostAddress}}/api/employees/1
+Content-Type: application/json
+
+{
+  "jobTitle": "Technical Lead"
+}
+
+###
+
+### 8. Delete an employee
+DELETE {{EmployeeManagementApi_HostAddress}}/api/employees/1
+
+###
+
+### 9. Import employees from the external sample API
+POST {{EmployeeManagementApi_HostAddress}}/api/employees/import-external
+Accept: application/json

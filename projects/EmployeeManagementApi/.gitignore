@@ -1,0 +1,44 @@
+
+# Build output
+bin/
+obj/
+
+# Visual Studio cache and settings
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# .NET test results
+TestResults/
+*.trx
+coverage/
+coverage.*
+
+# NuGet packages and caches
+*.nupkg
+*.snupkg
+packages/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*.cache
+
+# OS-generated files
+Thumbs.db
+.DS_Store
+
+# Publish output
+publish/
+artifacts/
+
+# User-specific configuration
+appsettings.Development.json
