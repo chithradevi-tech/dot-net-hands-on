@@ -2200,4 +2200,973 @@ const
 Employee OOP Project
 ```
 
+---
 
+Level: Intermediate to Advanced · Language: C# · IDE: Visual Studio · Target: ASP.NET Core Web API with .NET 10
+
+These notes are structured for you to teach a class. Each topic includes a definition, explanation, C# examples, expected output where useful, and teaching points. You can demonstrate the code using a C# Console App in Visual Studio.
+
+# 1. Object-Oriented Programming (OOP)
+
+OOP is a programming approach in which software is organized around objects that contain data and behaviour.
+
+The four main principles are:
+
+- Encapsulation
+- Inheritance
+- Polymorphism
+- Abstraction
+
+## 1.1 Encapsulation
+
+Definition: Encapsulation means combining data and related methods inside a class while controlling access to the internal state.
+
+Real-world example: A bank account does not allow anyone to change its balance directly. Deposits and withdrawals happen through controlled operations.
+
+```
+public class BankAccount
+{
+    private decimal balance;
+
+    public decimal GetBalance()
+    {
+        return balance;
+    }
+
+    public void Deposit(decimal amount)
+    {
+        if (amount <= 0)
+        {
+            throw new ArgumentException(
+                "Amount must be greater than zero.");
+        }
+
+        balance += amount;
+    }
+}
+```
+
+Usage:
+
+```
+BankAccount account = new BankAccount();
+
+account.Deposit(5000m);
+
+Console.WriteLine(account.GetBalance());
+```
+
+Output:
+
+```
+5000
+```
+
+Explain to students:
+
+- `private` prevents direct access to `balance` from outside the class.
+- `public` methods expose controlled operations.
+- Validation protects the object's state.
+
+## 1.2 Inheritance
+
+Definition: Inheritance allows a derived class to reuse and extend the functionality of a base class.
+
+```
+public class Employee
+{
+    public string Name { get; set; } = "";
+
+    public void DisplayName()
+    {
+        Console.WriteLine(Name);
+    }
+}
+
+public class Developer : Employee
+{
+    public string ProgrammingLanguage { get; set; } = "";
+}
+```
+
+Usage:
+
+```
+Developer developer = new Developer();
+
+developer.Name = "Arun";
+developer.ProgrammingLanguage = "C#";
+
+developer.DisplayName();
+
+Console.WriteLine(developer.ProgrammingLanguage);
+```
+
+Output:
+
+```
+Arun
+C#
+```
+
+`Developer` inherits `Name` and `DisplayName()` from `Employee`.
+
+Teaching point: C# supports single class inheritance: a class can directly inherit from one class, but it can implement multiple interfaces.
+
+## 1.3 Polymorphism
+
+Definition: Polymorphism means that the same operation can behave differently depending on the object or arguments involved.
+
+There are two commonly taught forms.
+
+### Compile-time polymorphism — overloading
+
+```
+public class Calculator
+{
+    public int Add(int a, int b)
+    {
+        return a + b;
+    }
+
+    public int Add(int a, int b, int c)
+    {
+        return a + b + c;
+    }
+}
+```
+
+```
+Calculator calculator = new Calculator();
+
+Console.WriteLine(calculator.Add(10, 20));
+Console.WriteLine(calculator.Add(10, 20, 30));
+```
+
+Output:
+
+```
+30
+60
+```
+
+### Runtime polymorphism — overriding
+
+```
+public class Animal
+{
+    public virtual void MakeSound()
+    {
+        Console.WriteLine("Animal makes a sound");
+    }
+}
+
+public class Dog : Animal
+{
+    public override void MakeSound()
+    {
+        Console.WriteLine("Dog barks");
+    }
+}
+```
+
+```
+Animal animal = new Dog();
+animal.MakeSound();
+```
+
+Output:
+
+```
+Dog barks
+```
+
+`virtual` allows a method to be overridden, and `override` provides the derived implementation.
+
+## 1.4 Abstraction
+
+Definition: Abstraction exposes essential functionality while hiding implementation details.
+
+Example using an abstract class:
+
+```
+public abstract class Payment
+{
+    public abstract void Pay(decimal amount);
+
+    public void PrintReceipt()
+    {
+        Console.WriteLine("Receipt generated");
+    }
+}
+
+public class UpiPayment : Payment
+{
+    public override void Pay(decimal amount)
+    {
+        Console.WriteLine($"Paid {amount:C} using UPI");
+    }
+}
+```
+
+Usage:
+
+```
+Payment payment = new UpiPayment();
+
+payment.Pay(500m);
+payment.PrintReceipt();
+```
+
+An abstract class cannot be instantiated directly. It can define abstract members that derived classes must implement.
+
+### Quick comparison
+
+| Principle     | Main purpose                                                       |
+| ------------- | ------------------------------------------------------------------ |
+| Encapsulation | Protect internal state                                             |
+| Inheritance   | Reuse and extend functionality                                     |
+| Polymorphism  | Support different behaviours through a common operation            |
+| Abstraction   | Expose essential functionality while hiding implementation details |
+
+# 2. Abstract Classes and Interfaces
+
+These concepts are essential for designing maintainable applications and ASP.NET Core services.
+
+## 2.1 Abstract classes
+
+An abstract class is a base class that cannot be instantiated directly.
+
+```
+public abstract class Shape
+{
+    public abstract double CalculateArea();
+
+    public void Display()
+    {
+        Console.WriteLine("This is a shape");
+    }
+}
+
+public class Circle : Shape
+{
+    public double Radius { get; set; }
+
+    public override double CalculateArea()
+    {
+        return Math.PI * Radius * Radius;
+    }
+}
+```
+
+Usage:
+
+```
+Shape shape = new Circle { Radius = 5 };
+
+Console.WriteLine(shape.CalculateArea());
+```
+
+The abstract class can contain both abstract and implemented methods, as well as fields, properties and constructors.
+
+## 2.2 Interfaces
+
+An interface defines a contract that implementing types agree to provide.
+
+```
+public interface INotificationService
+{
+    void Send(string message);
+}
+
+public class EmailNotificationService : INotificationService
+{
+    public void Send(string message)
+    {
+        Console.WriteLine($"Email sent: {message}");
+    }
+}
+
+public class SmsNotificationService : INotificationService
+{
+    public void Send(string message)
+    {
+        Console.WriteLine($"SMS sent: {message}");
+    }
+}
+```
+
+Usage:
+
+```
+INotificationService service =
+    new EmailNotificationService();
+
+service.Send("Welcome!");
+```
+
+Output:
+
+```
+Email sent: Welcome!
+```
+
+### Abstract class vs interface
+
+| Abstract class                                             | Interface                                                                       |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Can store instance state                                   | Primarily defines a contract                                                    |
+| Can have constructors                                      | Cannot have instance constructors                                               |
+| Can contain implemented and abstract members               | Can declare member contracts and, in modern C#, provide default implementations |
+| A class can inherit only one base class                    | A class can implement multiple interfaces                                       |
+| Useful for related types sharing common state or behaviour | Useful for defining capabilities and supporting interchangeable implementations |
+
+Web API connection: You may define an `IEmployeeService` interface and implement it with an `EmployeeService` class. ASP.NET Core dependency injection can then supply the implementation where it is required.
+
+# 3. Method Overloading and Overriding
+
+These concepts are related to polymorphism but solve different problems.
+
+## 3.1 Method overloading
+
+Methods have the same name but different parameter lists.
+
+```
+public class Calculator
+{
+    public int Add(int a, int b)
+        => a + b;
+
+    public double Add(double a, double b)
+        => a + b;
+
+    public int Add(int a, int b, int c)
+        => a + b + c;
+}
+```
+
+Overloading can differ by parameter count, parameter types or parameter order. Changing only the return type is not enough to overload a method.
+
+## 3.2 Method overriding
+
+A derived class changes the implementation of an inherited virtual or abstract method.
+
+```
+public class Notification
+{
+    public virtual void Send()
+    {
+        Console.WriteLine("Sending notification");
+    }
+}
+
+public class EmailNotification : Notification
+{
+    public override void Send()
+    {
+        Console.WriteLine("Sending email");
+    }
+}
+```
+
+### Comparison
+
+| Overloading                                         | Overriding                                           |
+| --------------------------------------------------- | ---------------------------------------------------- |
+| Same method name, different parameter lists         | Reimplements an inherited virtual or abstract member |
+| Resolved using the method signature at compile time | Uses runtime dispatch for virtual calls              |
+| Does not require inheritance                        | Requires an inheritance relationship                 |
+| Uses different parameter lists                      | Uses a compatible inherited signature                |
+
+# 4. Properties, Indexers and Access Modifiers
+
+## 4.1 Properties
+
+Properties expose data through `get` and `set` accessors.
+
+```
+public class Employee
+{
+    public string Name { get; set; } = "";
+
+    public decimal Salary { get; private set; }
+
+    public Employee(decimal salary)
+    {
+        Salary = salary;
+    }
+
+    public void IncreaseSalary(decimal amount)
+    {
+        if (amount > 0)
+        {
+            Salary += amount;
+        }
+    }
+}
+```
+
+`Salary` can be read from outside the class but assigned only inside the class.
+
+## 4.2 Indexers
+
+An indexer allows an object to be accessed using square-bracket syntax.
+
+```
+public class Team
+{
+    private readonly string[] members =
+        { "Arun", "Priya", "Kumar" };
+
+    public string this[int index]
+    {
+        get => members[index];
+    }
+}
+```
+
+Usage:
+
+```
+Team team = new Team();
+
+Console.WriteLine(team[0]);
+Console.WriteLine(team[1]);
+```
+
+Output:
+
+```
+Arun
+Priya
+```
+
+Indexers are useful for custom collection-like classes. This simple example relies on normal array index validation.
+
+## 4.3 Access modifiers
+
+| Modifier             | Accessibility                                         |
+| -------------------- | ----------------------------------------------------- |
+| `public`             | Accessible wherever the containing type is accessible |
+| `private`            | Within the containing type                            |
+| `protected`          | Within the containing type and derived types          |
+| `internal`           | Within the same assembly                              |
+| `protected internal` | Same assembly or derived types                        |
+| `private protected`  | Derived types within the same assembly                |
+
+Teach students to choose the narrowest access level that meets the requirement.
+
+# 5. Sealed and Partial Classes
+
+## 5.1 Sealed classes
+
+A `sealed` class cannot be inherited.
+
+```
+public sealed class SecurityManager
+{
+    public void Authenticate()
+    {
+        Console.WriteLine("User authenticated");
+    }
+}
+```
+
+This is not allowed:
+
+```
+// public class CustomSecurityManager : SecurityManager
+// {
+// }
+```
+
+You can also seal an overridden method to prevent further overriding in derived classes.
+
+## 5.2 Partial classes
+
+A `partial` class allows a type's declaration to be split across multiple files within the same project.
+
+`Employee.cs`
+
+```
+public partial class Employee
+{
+    public string Name { get; set; } = "";
+}
+```
+
+`EmployeeDetails.cs`
+
+```
+public partial class Employee
+{
+    public void Display()
+    {
+        Console.WriteLine(Name);
+    }
+}
+```
+
+Both declarations form one `Employee` class at compile time.
+
+Where used? Partial classes are useful in generated code and designer-based applications. They are not a requirement for every class.
+
+# 6. Structs, Enums and Records
+
+## 6.1 Structs
+
+A `struct` is a value type, commonly used to represent small values.
+
+```
+public struct Point
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+}
+```
+
+Usage:
+
+```
+Point p1 = new Point { X = 10, Y = 20 };
+Point p2 = p1;
+
+p2.X = 100;
+
+Console.WriteLine(p1.X); // 10
+Console.WriteLine(p2.X); // 100
+```
+
+Assigning `p1` to `p2` copies the struct value.
+
+## 6.2 Enums
+
+An enum defines a set of named constants.
+
+```
+public enum OrderStatus
+{
+    Pending,
+    Processing,
+    Shipped,
+    Delivered,
+    Cancelled
+}
+```
+
+Usage:
+
+```
+OrderStatus status = OrderStatus.Shipped;
+
+if (status == OrderStatus.Shipped)
+{
+    Console.WriteLine("Order has been shipped");
+}
+```
+
+Enums improve readability compared with unexplained numeric values.
+
+## 6.3 Records
+
+Records are types designed to support value-based equality and convenient data modelling.
+
+```
+public record EmployeeDto(
+    int Id,
+    string Name,
+    decimal Salary);
+```
+
+Usage:
+
+```
+var employee1 = new EmployeeDto(1, "Arun", 30000m);
+var employee2 = new EmployeeDto(1, "Arun", 30000m);
+
+Console.WriteLine(employee1 == employee2);
+```
+
+Output:
+
+```
+True
+```
+
+For records, equality is based on the record's values rather than object identity. Records are useful for DTOs and immutable-style data models, though their properties are not automatically deeply immutable.
+
+### Quick comparison
+
+| Type     | Typical use                           |
+| -------- | ------------------------------------- |
+| `class`  | Objects with identity and behaviour   |
+| `struct` | Small value-oriented data             |
+| `enum`   | A fixed set of named choices          |
+| `record` | Data models with value-based equality |
+
+# 7. Generics and Collections
+
+## 7.1 What are generics?
+
+Generics allow classes, interfaces and methods to work with specified types while maintaining compile-time type safety.
+
+Example:
+
+```
+public class Box<T>
+{
+    public T? Value { get; set; }
+}
+```
+
+Usage:
+
+```
+Box<int> numberBox = new Box<int>();
+numberBox.Value = 100;
+
+Box<string> textBox = new Box<string>();
+textBox.Value = "Hello";
+```
+
+Here, `T` is a type parameter. It becomes `int` or `string` when the generic type is constructed.
+
+## 7.2 List
+
+A `List<T>` stores an ordered collection that can grow or shrink.
+
+```
+List<string> names = new List<string>();
+
+names.Add("Arun");
+names.Add("Priya");
+names.Add("Kumar");
+
+names.Remove("Priya");
+
+foreach (string name in names)
+{
+    Console.WriteLine(name);
+}
+```
+
+Output:
+
+```
+Arun
+Kumar
+```
+
+Useful operations include `Add`, `Remove`, `Contains`, `Count` and `Clear`.
+
+## 7.3 Dictionary
+
+A `Dictionary<TKey, TValue>` stores key-value pairs. Each key must be unique.
+
+```
+Dictionary<int, string> employees = new();
+
+employees.Add(101, "Arun");
+employees.Add(102, "Priya");
+
+Console.WriteLine(employees[101]);
+```
+
+Output:
+
+```
+Arun
+```
+
+Use `TryGetValue` when a key might not exist:
+
+```
+if (employees.TryGetValue(103, out string? name))
+{
+    Console.WriteLine(name);
+}
+else
+{
+    Console.WriteLine("Employee not found");
+}
+```
+
+## 7.4 HashSet
+
+A `HashSet<T>` stores unique elements.
+
+```
+HashSet<int> numbers = new()
+{
+    10, 20, 10, 30, 20
+};
+
+foreach (int number in numbers)
+{
+    Console.WriteLine(number);
+}
+```
+
+The set contains only `10`, `20` and `30`. Do not rely on a particular enumeration order.
+
+### Collection comparison
+
+| Collection                | Main purpose                     |
+| ------------------------- | -------------------------------- |
+| `List<T>`                 | Ordered items; allows duplicates |
+| `Dictionary<TKey,TValue>` | Lookup by unique key             |
+| `HashSet<T>`              | Unique elements                  |
+
+# 8. Delegates, Events and Lambda Expressions
+
+## 8.1 Delegates
+
+A delegate is a type-safe reference to a method with a compatible signature.
+
+```
+public delegate int MathOperation(int a, int b);
+
+static int Add(int a, int b)
+{
+    return a + b;
+}
+
+MathOperation operation = Add;
+
+Console.WriteLine(operation(10, 20));
+```
+
+Output:
+
+```
+30
+```
+
+The delegate defines the method signature; the assigned method provides the implementation.
+
+## 8.2 Events
+
+Events provide a publish-subscribe mechanism. An object can notify subscribers when something happens.
+
+```
+public class OrderService
+{
+    public event Action<string>? OrderPlaced;
+
+    public void PlaceOrder()
+    {
+        Console.WriteLine("Order placed");
+
+        OrderPlaced?.Invoke("Order #101");
+    }
+}
+```
+
+Usage:
+
+```
+OrderService service = new();
+
+service.OrderPlaced += message =>
+    Console.WriteLine($"Notification: {message}");
+
+service.PlaceOrder();
+```
+
+Output:
+
+```
+Order placed
+Notification: Order #101
+```
+
+Explain:
+
+- `event` exposes a notification mechanism.
+- `+=` subscribes a handler.
+- `?.Invoke()` raises the event if subscribers exist.
+
+## 8.3 Lambda expressions
+
+A lambda is a concise way to define an anonymous function.
+
+```
+Func<int, int, int> add = (a, b) => a + b;
+
+Console.WriteLine(add(10, 20));
+```
+
+Output:
+
+```
+30
+```
+
+Common built-in delegate types:
+
+- `Action<T>` — represents a method that returns no value.
+- `Func<T, TResult>` — represents a method that returns a value.
+- `Predicate<T>` — represents a method that returns `bool` for a given input.
+
+Web API connection: Delegates and lambdas are widely used in LINQ, callbacks, event handlers and ASP.NET Core configuration.
+
+# 9. LINQ — Language Integrated Query
+
+LINQ allows you to query collections and other supported data sources using consistent syntax.
+
+For the following examples:
+
+```
+List<int> numbers = new()
+{
+    10, 15, 20, 25, 30
+};
+```
+
+## 9.1 `Where`
+
+Filters elements based on a condition.
+
+```
+var result = numbers.Where(n => n > 20);
+
+foreach (int n in result)
+{
+    Console.WriteLine(n);
+}
+```
+
+Output:
+
+```
+25
+30
+```
+
+## 9.2 `Select`
+
+Projects each element into a new value.
+
+```
+var result = numbers.Select(n => n * 2);
+
+foreach (int n in result)
+{
+    Console.WriteLine(n);
+}
+```
+
+The output is `20, 30, 40, 50, 60`.
+
+## 9.3 `FirstOrDefault`
+
+Returns the first matching element, or the default value if no match exists.
+
+```
+int result = numbers.FirstOrDefault(n => n > 20);
+
+Console.WriteLine(result);
+```
+
+Output:
+
+```
+25
+```
+
+For an `int` sequence with no match, the default is `0`. For reference types, the default is generally `null`.
+
+## 9.4 `Any`
+
+Checks whether at least one element satisfies a condition.
+
+```
+bool exists = numbers.Any(n => n > 25);
+
+Console.WriteLine(exists);
+```
+
+Output:
+
+```
+True
+```
+
+## 9.5 `GroupBy`
+
+Groups elements according to a key.
+
+```
+var employees = new[]
+{
+    new { Name = "Arun", Department = "IT" },
+    new { Name = "Priya", Department = "HR" },
+    new { Name = "Kumar", Department = "IT" }
+};
+
+var groups = employees.GroupBy(e => e.Department);
+
+foreach (var group in groups)
+{
+    Console.WriteLine(group.Key);
+
+    foreach (var employee in group)
+    {
+        Console.WriteLine(employee.Name);
+    }
+}
+```
+
+The employees are grouped by department, so Arun and Kumar belong to the IT group while Priya belongs to HR.
+
+### Other useful LINQ methods
+
+| Method              | Purpose                                                    |
+| ------------------- | ---------------------------------------------------------- |
+| `OrderBy`           | Sort ascending                                             |
+| `OrderByDescending` | Sort descending                                            |
+| `First`             | Return first element; throws if none exists                |
+| `SingleOrDefault`   | Return zero or one match; throws if multiple matches exist |
+| `Count`             | Count elements                                             |
+| `Sum`               | Calculate a sum                                            |
+| `Distinct`          | Remove duplicate values                                    |
+| `ToList`            | Materialize results into a list                            |
+
+### Important teaching point
+
+Many LINQ queries use deferred execution: the query runs when enumerated. Methods such as `ToList`, `Count` and `FirstOrDefault` execute the relevant query as needed.
+
+Web API connection: LINQ is used to filter employee records, search products, calculate totals and query database results using Entity Framework Core.
+
+# 10. Extension Methods
+
+An extension method allows you to call a static method using instance-method syntax without modifying the original type.
+
+```
+public static class StringExtensions
+{
+    public static bool IsValidName(this string value)
+    {
+        return !string.IsNullOrWhiteSpace(value);
+    }
+}
+```
+
+Usage:
+
+```
+string name = "Arun";
+
+Console.WriteLine(name.IsValidName());
+```
+
+Output:
+
+```
+True
+```
+
+Teaching points:
+
+- Extension methods are declared in a static class.
+- The method

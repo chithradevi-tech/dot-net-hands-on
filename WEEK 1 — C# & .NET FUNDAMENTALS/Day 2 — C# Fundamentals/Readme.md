@@ -2088,4 +2088,950 @@ Factorial
 Fibonacci
 ```
 
+---
+
+# Phase 1: C# Fundamentals — Complete Class Notes
+
+Level: Beginner · Language: C# · IDE: Visual Studio · Target: Future .NET Web API development
+
+## 1. Introduction to C\#
+
+### What is C#?
+
+C# (pronounced “C-Sharp”) is a modern, object-oriented programming language developed by Microsoft.
+
+It is used to develop:
+
+- Web applications and REST APIs
+- Desktop applications
+- Cloud applications
+- Games
+- Enterprise software
+
+### What is .NET?
+
+.NET is a development platform used to build and run applications written in languages such as C#.
+
+Explain the difference to students:
+
+- C# — the programming language.
+- .NET — the platform and runtime used to build and run applications.
+- ASP.NET Core — the framework used to build web applications and Web APIs.
+- Visual Studio — the IDE used to write, run, test and debug code.
+
+### First C# program
+
+Create a Console App in Visual Studio and write:
+
+```
+Console.WriteLine("Hello, World!");
+```
+
+Output:
+
+```
+Hello, World!
+```
+
+Explain:
+
+- `Console` — provides console input and output functionality.
+- `WriteLine()` — displays text and moves to a new line.
+- `"Hello, World!"` — a string literal.
+- `;` — terminates the statement.
+
+Another example:
+
+```
+Console.Write("Hello ");
+Console.Write("Students");
+Console.WriteLine("!");
+```
+
+Output:
+
+```
+Hello Students!
+```
+
+Teaching point: `Write()` does not automatically move to a new line, while `WriteLine()` does.
+
+## 2. Variables, Data Types and Constants
+
+### 2.1 What is a variable?
+
+A variable is a named storage location used to hold a value that can be used or changed during program execution.
+
+Syntax:
+
+```
+dataType variableName = value;
+```
+
+Example:
+
+```
+int age = 25;
+string name = "Arun";
+double salary = 25000.50;
+bool isActive = true;
+
+Console.WriteLine(name);
+Console.WriteLine(age);
+Console.WriteLine(salary);
+Console.WriteLine(isActive);
+```
+
+Output:
+
+```
+Arun
+25
+25000.5
+True
+```
+
+### 2.2 Common C# data types
+
+| Data type | Purpose                                  | Example                       |
+| --------- | ---------------------------------------- | ----------------------------- |
+| `int`     | Whole numbers                            | `int age = 25;`               |
+| `long`    | Larger whole numbers                     | `long population = 9000000L;` |
+| `float`   | Single-precision decimal                 | `float price = 12.5F;`        |
+| `double`  | Double-precision decimal                 | `double salary = 25000.50;`   |
+| `decimal` | High-precision decimal, useful for money | `decimal amount = 1500.75m;`  |
+| `char`    | Single character                         | `char grade = 'A';`           |
+| `string`  | Text                                     | `string name = "Arun";`       |
+| `bool`    | True or false                            | `bool isPassed = true;`       |
+
+Explain the difference between `char` and `string`:
+
+```
+char grade = 'A';
+string name = "Arun";
+```
+
+A `char` uses single quotes, while a string uses double quotes.
+
+### 2.3 Constants
+
+A constant is a value that cannot be changed after it has been declared.
+
+```
+const double Pi = 3.14159;
+
+Console.WriteLine(Pi);
+```
+
+The following is invalid:
+
+```
+const int age = 20;
+age = 25;
+```
+
+Teaching point: Use `const` for values that must remain fixed and can be determined at compile time.
+
+### 2.4 Variable naming rules
+
+Valid:
+
+```
+int studentAge = 20;
+string studentName = "Ravi";
+```
+
+Invalid:
+
+```
+// int 1age = 20;
+// string student name = "Ravi";
+```
+
+Common convention: use `camelCase` for local variables, such as `studentName`.
+
+### Practice exercise
+
+Create variables for a student's name, age, marks, grade and pass status. Print all five values.
+
+## 3. Operators and Type Conversion
+
+### 3.1 Arithmetic operators
+
+| Operator | Meaning        | Example  |
+| -------- | -------------- | -------- |
+| `+`      | Addition       | `10 + 5` |
+| `-`      | Subtraction    | `10 - 5` |
+| `*`      | Multiplication | `10 * 5` |
+| `/`      | Division       | `10 / 5` |
+| `%`      | Remainder      | `10 % 3` |
+
+Example:
+
+```
+int a = 10;
+int b = 3;
+
+Console.WriteLine(a + b); // 13
+Console.WriteLine(a - b); // 7
+Console.WriteLine(a * b); // 30
+Console.WriteLine(a / b); // 3
+Console.WriteLine(a % b); // 1
+```
+
+Important: When both operands are integers, integer division discards the fractional part.
+
+```
+Console.WriteLine(10 / 3);       // 3
+Console.WriteLine(10.0 / 3);     // Approximately 3.3333
+```
+
+### 3.2 Comparison operators
+
+These return a Boolean result.
+
+```
+int age = 20;
+
+Console.WriteLine(age == 20); // True
+Console.WriteLine(age != 20); // False
+Console.WriteLine(age > 18);  // True
+Console.WriteLine(age < 18);  // False
+Console.WriteLine(age >= 20); // True
+Console.WriteLine(age <= 18); // False
+```
+
+Explain the difference:
+
+- `=` assigns a value.
+- `==` compares two values.
+
+### 3.3 Logical operators
+
+```
+int age = 22;
+bool hasId = true;
+
+Console.WriteLine(age >= 18 && hasId); // True
+Console.WriteLine(age >= 18 || hasId); // True
+Console.WriteLine(!hasId);             // False
+```
+
+- `&&` — AND: both conditions must be true.
+- `||` — OR: at least one condition must be true.
+- `!` — NOT: reverses a Boolean value.
+
+### 3.4 Type conversion
+
+Implicit conversion:
+
+```
+int number = 100;
+double result = number;
+
+Console.WriteLine(result); // 100
+```
+
+Explicit conversion:
+
+```
+double price = 99.99;
+int wholePrice = (int)price;
+
+Console.WriteLine(wholePrice); // 99
+```
+
+The explicit cast truncates the fractional part in this example.
+
+String conversion:
+
+```
+string value = "100";
+int number = int.Parse(value);
+
+Console.WriteLine(number + 50); // 150
+```
+
+For user input, `TryParse` is safer:
+
+```
+Console.Write("Enter your age: ");
+string? input = Console.ReadLine();
+
+if (int.TryParse(input, out int age))
+{
+    Console.WriteLine($"Your age is {age}");
+}
+else
+{
+    Console.WriteLine("Please enter a valid whole number.");
+}
+```
+
+Teaching point: `Parse` can throw an exception when input is invalid. `TryParse` lets you handle invalid input without that exception.
+
+## 4. Conditional Statements
+
+Conditional statements allow a program to make decisions.
+
+### 4.1 `if`
+
+```
+int age = 20;
+
+if (age >= 18)
+{
+    Console.WriteLine("Eligible to vote.");
+}
+```
+
+### 4.2 `if-else`
+
+```
+int marks = 45;
+
+if (marks >= 35)
+{
+    Console.WriteLine("Pass");
+}
+else
+{
+    Console.WriteLine("Fail");
+}
+```
+
+### 4.3 `else if`
+
+```
+int marks = 85;
+
+if (marks >= 90)
+{
+    Console.WriteLine("Grade A");
+}
+else if (marks >= 75)
+{
+    Console.WriteLine("Grade B");
+}
+else if (marks >= 50)
+{
+    Console.WriteLine("Grade C");
+}
+else if (marks >= 35)
+{
+    Console.WriteLine("Grade D");
+}
+else
+{
+    Console.WriteLine("Fail");
+}
+```
+
+Output:
+
+```
+Grade B
+```
+
+Explain that conditions are checked from top to bottom. The first matching branch executes.
+
+### 4.4 `switch`
+
+Use `switch` when selecting from several known alternatives.
+
+```
+int day = 2;
+
+switch (day)
+{
+    case 1:
+        Console.WriteLine("Monday");
+        break;
+
+    case 2:
+        Console.WriteLine("Tuesday");
+        break;
+
+    case 3:
+        Console.WriteLine("Wednesday");
+        break;
+
+    default:
+        Console.WriteLine("Invalid day");
+        break;
+}
+```
+
+Output:
+
+```
+Tuesday
+```
+
+`break` exits the switch section. `default` handles cases not covered by the other labels.
+
+### Classroom exercise
+
+Write a program that accepts marks from 0 to 100 and displays the grade. Reject values outside the valid range.
+
+## 5. Loops
+
+Loops execute a block of code repeatedly.
+
+### 5.1 `for` loop
+
+Use it when you know how many iterations you want.
+
+```
+for (int i = 1; i <= 5; i++)
+{
+    Console.WriteLine(i);
+}
+```
+
+Output:
+
+```
+1
+2
+3
+4
+5
+```
+
+Explain the three parts:
+
+```
+for (initialization; condition; update)
+```
+
+- Initialization: runs once.
+- Condition: checked before each iteration.
+- Update: runs after each iteration.
+
+### 5.2 `while` loop
+
+Use it when repetition depends on a condition.
+
+```
+int i = 1;
+
+while (i <= 5)
+{
+    Console.WriteLine(i);
+    i++;
+}
+```
+
+### 5.3 `foreach` loop
+
+Use it to iterate over elements in a collection or array.
+
+```
+string[] names = { "Arun", "Priya", "Kumar" };
+
+foreach (string name in names)
+{
+    Console.WriteLine(name);
+}
+```
+
+Output:
+
+```
+Arun
+Priya
+Kumar
+```
+
+### 5.4 `break` and `continue`
+
+`break` terminates the loop:
+
+```
+for (int i = 1; i <= 10; i++)
+{
+    if (i == 5)
+    {
+        break;
+    }
+
+    Console.WriteLine(i);
+}
+```
+
+Output: `1 2 3 4`
+
+`continue` skips the current iteration:
+
+```
+for (int i = 1; i <= 5; i++)
+{
+    if (i == 3)
+    {
+        continue;
+    }
+
+    Console.WriteLine(i);
+}
+```
+
+Output: `1 2 4 5`
+
+Common mistake: Forgetting to update the counter in a `while` loop may cause an infinite loop.
+
+## 6. Methods, Parameters and Return Types
+
+A method is a named block of code that performs a particular task.
+
+### 6.1 Method without a return value
+
+```
+static void Greet()
+{
+    Console.WriteLine("Welcome to C#");
+}
+
+Greet();
+```
+
+`void` means the method does not return a value.
+
+### 6.2 Method with parameters
+
+```
+static void GreetStudent(string name)
+{
+    Console.WriteLine($"Welcome, {name}");
+}
+
+GreetStudent("Arun");
+GreetStudent("Priya");
+```
+
+Here, `name` is a parameter, and `"Arun"` is an argument in the first method call.
+
+### 6.3 Method with a return value
+
+```
+static int Add(int a, int b)
+{
+    return a + b;
+}
+
+int result = Add(10, 20);
+
+Console.WriteLine(result); // 30
+```
+
+Explain:
+
+- `int` — return type.
+- `Add` — method name.
+- `int a, int b` — parameters.
+- `return` — sends the result back to the caller.
+
+### 6.4 Why use methods?
+
+Methods help with:
+
+- Code reuse
+- Readability
+- Easier testing
+- Easier maintenance
+
+### Practice exercise
+
+Create methods to calculate the area of a rectangle, calculate the square of a number, and determine whether a number is even or odd.
+
+## 7. Arrays and Strings
+
+### 7.1 Arrays
+
+An array stores multiple values of the same type in a single variable.
+
+```
+int[] marks = { 80, 75, 90, 65, 88 };
+
+Console.WriteLine(marks[0]); // 80
+Console.WriteLine(marks[2]); // 90
+Console.WriteLine(marks.Length); // 5
+```
+
+Array indexes start at `0`.
+
+For an array of five elements, valid indexes are `0` to `4`.
+
+Use a loop to print every element:
+
+```
+int[] marks = { 80, 75, 90, 65, 88 };
+
+for (int i = 0; i < marks.Length; i++)
+{
+    Console.WriteLine(marks[i]);
+}
+```
+
+### 7.2 Strings
+
+A string stores text.
+
+```
+string name = "Arun Kumar";
+
+Console.WriteLine(name.Length);
+Console.WriteLine(name.ToUpper());
+Console.WriteLine(name.ToLower());
+Console.WriteLine(name.Contains("Kumar"));
+Console.WriteLine(name.Replace("Arun", "Ravi"));
+```
+
+Strings are immutable: string operations produce new strings rather than changing the original string in place.
+
+### 7.3 String interpolation
+
+```
+string name = "Priya";
+int age = 22;
+
+Console.WriteLine($"My name is {name} and I am {age} years old.");
+```
+
+The `$` allows expressions inside `{}` to be evaluated and included in the string.
+
+### Practice exercise
+
+Store five student names in an array. Print them one by one and search for a particular name.
+
+## 8. Classes and Objects
+
+C# is an object-oriented programming language.
+
+A class defines the data and behaviour that its objects can have. An object is an instance of a class.
+
+Example:
+
+```
+class Student
+{
+    public string Name = "";
+    public int Age;
+
+    public void DisplayDetails()
+    {
+        Console.WriteLine($"Name: {Name}");
+        Console.WriteLine($"Age: {Age}");
+    }
+}
+```
+
+Create an object and use it:
+
+```
+Student student = new Student();
+
+student.Name = "Arun";
+student.Age = 20;
+
+student.DisplayDetails();
+```
+
+Output:
+
+```
+Name: Arun
+Age: 20
+```
+
+Explain:
+
+- `class Student` declares a class.
+- `new Student()` creates an instance.
+- `student` is a variable referring to that instance.
+- `DisplayDetails()` is an instance method.
+
+In a typical modern Console App, put the `Student` class declaration after the top-level statements.
+
+### Why are classes important?
+
+They group related data and operations into a single logical unit. In a Web API, you will use classes for entities, request models, response models and services.
+
+## 9. Constructors and Properties
+
+### 9.1 Constructors
+
+A constructor initializes an object when it is created.
+
+```
+class Student
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+
+    public Student(string name, int age)
+    {
+        Name = name;
+        Age = age;
+    }
+
+    public void Display()
+    {
+        Console.WriteLine($"{Name} - {Age}");
+    }
+}
+```
+
+Usage:
+
+```
+Student student = new Student("Arun", 20);
+
+student.Display();
+```
+
+Output:
+
+```
+Arun - 20
+```
+
+Important teaching points:
+
+- A constructor has the same name as its class.
+- A constructor has no return type.
+- Constructors can accept parameters.
+- C# supports constructor overloading.
+
+### 9.2 Properties
+
+Properties provide a controlled way to read or modify an object's data.
+
+```
+class Employee
+{
+    public string Name { get; set; }
+    public decimal Salary { get; set; }
+}
+```
+
+Usage:
+
+```
+Employee employee = new Employee();
+
+employee.Name = "Priya";
+employee.Salary = 35000m;
+
+Console.WriteLine(employee.Name);
+Console.WriteLine(employee.Salary);
+```
+
+Explain:
+
+- `get` reads the value.
+- `set` assigns the value.
+- `{ get; set; }` is an auto-implemented property.
+
+Properties are generally preferred over public fields for application models.
+
+## 10. Access Modifiers
+
+Access modifiers control where classes and members can be accessed.
+
+| Modifier             | Meaning                                                               |
+| -------------------- | --------------------------------------------------------------------- |
+| `public`             | Accessible wherever the containing type and other access rules permit |
+| `private`            | Accessible only within the containing type                            |
+| `protected`          | Accessible within the containing type and derived types               |
+| `internal`           | Accessible within the same assembly                                   |
+| `protected internal` | Accessible within the same assembly or from derived types             |
+| `private protected`  | Accessible from derived types within the same assembly                |
+
+Example:
+
+```
+class BankAccount
+{
+    private decimal balance;
+
+    public void Deposit(decimal amount)
+    {
+        if (amount > 0)
+        {
+            balance += amount;
+        }
+    }
+
+    public decimal GetBalance()
+    {
+        return balance;
+    }
+}
+```
+
+Usage:
+
+```
+BankAccount account = new BankAccount();
+
+account.Deposit(1000m);
+
+Console.WriteLine(account.GetBalance());
+```
+
+Output:
+
+```
+1000
+```
+
+Direct access to `account.balance` is not allowed because `balance` is private.
+
+Teaching point: Access modifiers support encapsulation by controlling access to an object's implementation and data.
+
+## 11. The `static` Keyword
+
+The `static` keyword indicates that a member belongs to the type itself rather than to an individual instance.
+
+```
+class Calculator
+{
+    public static int Add(int a, int b)
+    {
+        return a + b;
+    }
+}
+```
+
+Usage:
+
+```
+int result = Calculator.Add(10, 20);
+
+Console.WriteLine(result);
+```
+
+No `Calculator` object is required to call `Add`.
+
+Compare with an instance method:
+
+```
+class Calculator
+{
+    public int Multiply(int a, int b)
+    {
+        return a * b;
+    }
+}
+```
+
+Usage:
+
+```
+Calculator calculator = new Calculator();
+
+Console.WriteLine(calculator.Multiply(10, 20));
+```
+
+Static members are useful for operations that do not require instance-specific state.
+
+In a top-level Console App, you may also see methods declared `static` when they are used without creating a separate object.
+
+## 12. Value Types vs Reference Types
+
+This topic is important because it helps students understand assignments, method arguments and object behaviour.
+
+### Value types
+
+Examples include `int`, `double`, `bool`, `char` and `struct`.
+
+```
+int a = 10;
+int b = a;
+
+b = 20;
+
+Console.WriteLine(a); // 10
+Console.WriteLine(b); // 20
+```
+
+The assignment copies the value.
+
+### Reference types
+
+Examples include classes, arrays and strings.
+
+```
+class Student
+{
+    public string Name { get; set; } = "";
+}
+```
+
+```
+Student s1 = new Student();
+s1.Name = "Arun";
+
+Student s2 = s1;
+s2.Name = "Priya";
+
+Console.WriteLine(s1.Name); // Priya
+Console.WriteLine(s2.Name); // Priya
+```
+
+Both variables refer to the same object.
+
+Important nuance: a reference-type variable stores a reference to an object, not the object itself. Assigning the variable copies the reference, so both references can point to the same object.
+
+## 13. Nullable Types and Null Handling
+
+### 13.1 What is `null`?
+
+`null` represents the absence of a value for a reference or nullable value type.
+
+A normal `int` cannot hold `null`:
+
+```
+int age = 25;
+```
+
+A nullable integer can:
+
+```
+int? age = null;
+
+Console.WriteLine(age.HasValue); // False
+```
+
+The `?` in `int?` allows the integer to have no value.
+
+### 13.2 Nullable reference types
+
+With nullable reference types enabled:
+
+```
+string? name = null;
+string city = "Chennai";
+```
+
+`string?` indicates that `name` may be null. `string` indicates that the variable is intended to hold a non-null string, although compile-time warnings do not guarantee runtime safety.
+
+### 13.3 Null-coalescing operator
+
+```
+string? name = null;
+
+string displayName = name ?? "Guest";
+
+Console.WriteLine(displayName);
+```
+
+Output:
+
+```
+Guest
+```
+
+`??` uses
 
